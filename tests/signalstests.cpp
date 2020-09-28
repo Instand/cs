@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-#include <signals/signals.hpp>
+#include <cs/signals/signals.hpp>
 
 TEST(Signals, BaseSignalUsingByPointer) {
     static const std::string expectedString = "Hello, world!";
