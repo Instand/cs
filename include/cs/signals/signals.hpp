@@ -350,7 +350,7 @@ public:
                          std::placeholders::_6, std::placeholders::_7, std::placeholders::_8, std::placeholders::_9, std::placeholders::_10);
     }
 };
-}  // namespace Args
+}  // namespace helper
 
 ///
 /// Signal - slot connection entity
@@ -358,7 +358,7 @@ public:
 class Connector {
     template <typename Object>
     static details::ObjectPointer checkConnection(const ISignal* signal, const Object& object, std::true_type) {
-        IConnectable* connectable = static_cast<IConnectable*>(object);
+        IConnectable* connectable = reinterpret_cast<IConnectable*>(object);
         connectable->signals_.push_back(const_cast<ISignal*>(signal));
 
         return details::ObjectPointer(connectable);

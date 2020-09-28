@@ -304,7 +304,7 @@ TEST(Signals, UnexpectedDisconnect) {
         cs::Signal<void(const std::string&)> signal;
     };
 
-    class B : public cs::IConnectable {
+    class B : private cs::IConnectable {
     public slots:
         void onSignal(const std::string& msg) {
             isCalled = true;
