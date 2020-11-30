@@ -8,6 +8,8 @@ else()
     set(IS_TOPLEVEL_PROJECT FALSE)
 endif()
 
+add_subdirectory(third-party)
+
 if(IS_TOPLEVEL_PROJECT)
     enable_testing()
     add_subdirectory(tests)
