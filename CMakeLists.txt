@@ -2,15 +2,21 @@ cmake_minimum_required(VERSION 3.12)
 
 project(cs LANGUAGES CXX)
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(IS_TOPLEVEL_PROJECT TRUE)
 else()
     set(IS_TOPLEVEL_PROJECT FALSE)
 endif()
 
+if (MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+else()
+    set(CMAKE_CXX_STANDARD 17)
+endif()
+
 add_subdirectory(third-party)
 
-if(IS_TOPLEVEL_PROJECT)
+if (IS_TOPLEVEL_PROJECT)
     enable_testing()
     add_subdirectory(tests)
 endif()
