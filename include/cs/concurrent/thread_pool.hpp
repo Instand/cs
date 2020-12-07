@@ -88,7 +88,7 @@ inline std::future<typename std::result_of<F(Args...)>::type> ThreadPool::enqueu
     using ResultType = typename std::result_of<F(Args...)>::type;
 
     const auto task = std::make_shared<std::packaged_task<ResultType()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
-    const auto res = task->get_future();
+    auto res = task->get_future();
 
     enqueueImpl([task] {
         (*task)();
