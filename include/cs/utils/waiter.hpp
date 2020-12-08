@@ -12,7 +12,7 @@ public:
     static void wait(Predicate&& predicate, const std::chrono::milliseconds ms) {
         const auto timePoint = std::chrono::steady_clock::now();
 
-        while (predicate) {
+        while (predicate()) {
             const auto now = std::chrono::steady_clock::now();
             const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - timePoint);
 
