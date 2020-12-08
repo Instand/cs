@@ -36,10 +36,10 @@ private:
     template <typename Func>
     static void execute(RunPolicy policy, Func&& function) {
         if (policy == RunPolicy::Thread) {
-            runThread(std::forward(function));
+            runThread(std::forward<Func>(function));
         }
         else {
-            runThreadPool(std::forward(function));
+            runThreadPool(std::forward<Func>(function));
         }
     }
 
