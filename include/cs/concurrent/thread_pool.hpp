@@ -26,6 +26,10 @@ public:
     // checks running state
     bool isRunning() const;
 
+    // get instace of thread pool
+    // warn: be aware it creates static thread pool
+    static ThreadPool& instance();
+
 private:
     using Task = std::function<void()>;
 
@@ -104,6 +108,11 @@ inline void ThreadPool::enqueue(F&& f, Args&&... args) {
 
 inline bool ThreadPool::isRunning() const {
     return stop_.load(std::memory_order_acquire);
+}
+
+inline ThreadPool& ThreadPool::instance() {
+    static ThreadPool pool;
+    return pool;
 }
 
 inline void ThreadPool::enqueueImpl(ThreadPool::Task&& task) {
