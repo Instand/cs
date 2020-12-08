@@ -48,6 +48,7 @@ private:
 
     template <typename T>
     friend class FutureWatcher;
+    friend class Concurrent;
 };
 }
 
