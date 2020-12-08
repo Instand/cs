@@ -1,6 +1,11 @@
 #ifndef THREAD_POOL_HPP
 #define THREAD_POOL_HPP
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#endif
+
 #include <vector>
 #include <queue>
 #include <future>
@@ -134,5 +139,9 @@ inline void ThreadPool::routine() {
     }
 }
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif  // THREAD_POOL_HPP
