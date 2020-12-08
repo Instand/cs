@@ -17,6 +17,7 @@ template <typename Result>
 class FutureBase : public std::enable_shared_from_this<FutureBase<Result>> {
 public:
     using Id = uint64_t;
+    friend class Concurrent;
 
 protected:
     FutureBase() {
