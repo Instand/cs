@@ -23,6 +23,11 @@ public:
             std::this_thread::yield();
         }
     }
+
+    template<typename Predicate>
+    static void wait(Predicate&& predicate, const int ms) {
+        cs::Waiter::wait(std::forward<Predicate>(predicate), std::chrono::milliseconds(ms));
+    }
 };
 }
 
