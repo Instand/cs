@@ -7,6 +7,7 @@
 namespace cs {
 // waits predicate or some time
 class Waiter {
+public:
     template<typename Predicate>
     static void wait(Predicate&& predicate, const std::chrono::milliseconds ms) {
         const auto timePoint = std::chrono::steady_clock::now();
