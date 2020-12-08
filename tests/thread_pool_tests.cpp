@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <cs/utils/waiter.hpp>
 #include <cs/concurrent/thread_pool.hpp>
 
 TEST(ThreadPool, BaseUsage) {
@@ -12,11 +13,7 @@ TEST(ThreadPool, BaseUsage) {
         called.store(true, std::memory_order_release);
     });
 
-    size_t i = 0;
-
-    while (!called.load(std::memory_order_acquire) || i++ > 99) {
-        std::this_thread::yield();
-    }
+    cs::Waiter::wait([] { return !called.load(std::memory_order_acquire); }, 2000);
 
     ASSERT_TRUE(called.load(std::memory_order_acquire));
 }
