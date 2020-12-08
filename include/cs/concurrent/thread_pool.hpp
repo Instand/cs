@@ -6,7 +6,6 @@
 #include <future>
 #include <mutex>
 #include <functional>
-#include <atomic>
 
 namespace cs {
 class ThreadPool {
@@ -35,50 +34,31 @@ private:
 
     void enqueueImpl(Task&& task);
 
+    // every thread loop
+    void routine();
+
     std::queue<Task> tasks_;
     std::vector<std::thread> workers_;
 
-    std::atomic<bool> stop_;
-
     std::mutex mutex_;
     std::condition_variable notifier_;
+
+    bool stop_ = false;
 };
  
-inline ThreadPool::ThreadPool(size_t threads):
-    stop_(false)
-{
-    const auto routine = [pool = this] {
-        for (;;) {
-            Task task;
-
-            {
-                std::unique_lock lock(pool->mutex_);
-
-                pool->notifier_.wait(lock, [pool] {
-                    return pool->stop_.load(std::memory_order_acquire) || !pool->tasks_.empty();
-                });
-
-                if (pool->stop_.load(std::memory_order_acquire) && pool->tasks_.empty()) {
-                    return;
-                }
-
-                task = std::move(pool->tasks_.front());
-                pool->tasks_.pop();
-            }
-
-            task();
-        }
-    };
-
+inline ThreadPool::ThreadPool(size_t threads) {
     for (size_t i = 0; i < threads; ++i) {
-        workers_.emplace_back(routine);
+        workers_.emplace_back(&ThreadPool::routine, this);
     }
 }
 
 inline ThreadPool::ThreadPool():ThreadPool(std::thread::hardware_concurrency()) {}
 
 inline ThreadPool::~ThreadPool() {
-    stop_.store(true, std::memory_order_release);
+    {
+        std::lock_guard lock(mutex_);
+        stop_ = true;
+    }
 
     notifier_.notify_all();
 
@@ -107,7 +87,7 @@ inline void ThreadPool::enqueue(F&& f, Args&&... args) {
 }
 
 inline bool ThreadPool::isRunning() const {
-    return stop_.load(std::memory_order_acquire);
+    return stop_;
 }
 
 inline ThreadPool& ThreadPool::instance() {
@@ -117,17 +97,41 @@ inline ThreadPool& ThreadPool::instance() {
 
 inline void ThreadPool::enqueueImpl(ThreadPool::Task&& task) {
     {
-        // don't allow enqueueing after stopping the pool
-        if (stop_.load(std::memory_order_acquire)) {
+        if (stop_) {
             throw std::runtime_error("enqueue on stopped ThreadPool");
         }
 
-        std::unique_lock lock(mutex_);
+        std::lock_guard lock(mutex_);
 
         tasks_.emplace(std::move(task));
     }
 
     notifier_.notify_one();
+}
+
+inline void ThreadPool::routine() {
+    for (;;) {
+        Task task;
+
+        {
+            std::unique_lock lock(mutex_);
+
+            notifier_.wait(lock, [pool = this] {
+                return pool->stop_ || !pool->tasks_.empty();
+            });
+
+            if (stop_) {
+                break;
+            }
+
+            if (!tasks_.empty()) {
+                task = std::move(tasks_.front());
+                tasks_.pop();
+            }
+        }
+
+        task();
+    }
 }
 }
 
