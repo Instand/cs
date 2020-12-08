@@ -2,8 +2,6 @@
 #define CONCURRENT_HPP
 
 #include <list>
-#include <mutex>
-#include <functional>
 
 #include <cs/concurrent/future_watcher.hpp>
 
