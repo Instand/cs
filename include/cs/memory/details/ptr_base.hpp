@@ -8,7 +8,7 @@
 namespace cs {
 class PtrBaseException : public std::exception {
 public:
-    PtrBaseException() = default;
+    PtrBaseException() = delete;
     explicit PtrBaseException(const char* message);
 
     virtual const char* what() const noexcept override;
