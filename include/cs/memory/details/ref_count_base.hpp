@@ -26,7 +26,9 @@ void RefCountBase::increment() {
 }
 
 void RefCountBase::decrement() {
-    if (count_.fetch_sub(1) == 0) {
+    count_.fetch_sub(1);
+
+    if (useCount() == 0) {
         deleteElement();
         deleteThis();
     }
