@@ -61,6 +61,7 @@ public:
         Worker::execute(policy, std::move(binder));
     }
 
+    // executes function in other threads by run policy
     template <typename Func>
     static void execute(cs::RunPolicy policy, Func&& function) {
         Worker::execute(policy, std::forward<Func>(function));
