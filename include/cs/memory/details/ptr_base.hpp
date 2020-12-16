@@ -19,7 +19,10 @@ protected:
     PtrBase(const PtrBase&) = delete;
     PtrBase& operator=(const PtrBase&) = delete;
 
+public:
     int useCount() const;
+
+protected:
 
     template<typename Type>
     void moveConstruct(PtrBase<Type>&& ptrBase);
