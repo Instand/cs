@@ -17,6 +17,12 @@ public:
     explicit SharedPtr(T* value);
     ~SharedPtr();
 
+    SharedPtr(const SharedPtr& ptr);
+    SharedPtr(SharedPtr&& ptr);
+
+    SharedPtr& operator=(const SharedPtr& ptr);
+    SharedPtr& operator=(SharedPtr&& ptr);
+
     template <typename Type>
     SharedPtr(const SharedPtr<Type>& ptr);
 
@@ -46,6 +52,28 @@ SharedPtr<T>::SharedPtr(T* value) {
 template <typename T>
 SharedPtr<T>::~SharedPtr() {
     this->decrement();
+}
+
+template <typename T>
+SharedPtr<T>::SharedPtr(const SharedPtr& ptr) {
+    this->copyConstruct(ptr);
+}
+
+template <typename T>
+SharedPtr<T>::SharedPtr(SharedPtr&& ptr) {
+    this->moveConstruct(std::move(ptr));
+}
+
+template <typename T>
+SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr& ptr) {
+    SharedPtr<T>(ptr).swap(*this);
+    return *this;
+}
+
+template <typename T>
+SharedPtr<T>& SharedPtr<T>::operator=(SharedPtr&& ptr) {
+    SharedPtr<T>(std::move(ptr)).swap(*this);
+    return *this;
 }
 
 template <typename T> template <typename Type>

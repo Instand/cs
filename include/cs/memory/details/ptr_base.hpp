@@ -57,7 +57,7 @@ void PtrBase<T>::moveConstruct(PtrBase<Type>&& ptr) {
 
 template <typename T> template <typename Type>
 void PtrBase<T>::copyConstruct(const PtrBase<Type>& ptr) {
-    ptr->increment();
+    ptr.increment();
 
     ptr_ = ptr.ptr_;
     refCountBase_ = ptr.refCountBase_;
