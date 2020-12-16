@@ -6,7 +6,7 @@
 namespace cs {
 class RefCountBase {
 public:
-    RefCountBase();
+    RefCountBase() = default;
     virtual ~RefCountBase() {}
 
     virtual void deleteElement() noexcept = 0;
@@ -18,12 +18,8 @@ public:
     int useCount() const;
 
 private:
-    std::atomic<int> count_ = { 0 };
+    std::atomic<int> count_ = { 1 };
 };
-
-RefCountBase::RefCountBase() {
-    increment();
-}
 
 void RefCountBase::increment() {
     count_.fetch_add(1);

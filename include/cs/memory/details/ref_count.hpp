@@ -13,7 +13,7 @@ public:
     virtual void deleteThis() noexcept override;
 
 private:
-    T* ptr_;
+    T* ptr_ = nullptr;
 };
 
 template<typename T>
