@@ -13,7 +13,7 @@ class SharedPtr;
 template <typename T>
 class PtrBase {
 protected:
-    using ElementType = std::remove_extent<T>;
+    using ElementType = typename std::remove_extent<T>::type;
 
     PtrBase() = default;
     PtrBase(const PtrBase&) = delete;
@@ -35,7 +35,7 @@ protected:
     void swap(PtrBase& ptr);
 
 private:
-    T* ptr_ = nullptr;
+    ElementType* ptr_ = nullptr;
     RefCountBase* refCountBase_ = nullptr;
 
     friend SharedPtr<T>;
