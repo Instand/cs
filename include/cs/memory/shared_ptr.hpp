@@ -110,7 +110,7 @@ typename SharedPtr<T>::ElementType* SharedPtr<T>::operator->() const {
 
 template <typename T>
 void SharedPtr<T>::swap(SharedPtr& ptr) {
-    this->swap(ptr);
+    SharedPtrBase::swap(ptr);
 }
 }
 
