@@ -50,6 +50,6 @@ TEST(SharedPtr, MoveConstruct) {
         ASSERT_EQ(ptr2.useCount(), 1);
     }
 
-    ASSERT_EQ(ptr1.useCount(), 0);
+    ASSERT_EQ(ptr1.useCount(), 0); // NOLINT
     ASSERT_TRUE(called);
 }
