@@ -6,30 +6,30 @@
 
 class A {
 public:
-    explicit A(bool& b):called_(b) {}
+    explicit A(int& count):count_(count) {}
     ~A() {
-        called_ = true;
+        ++count_;
     }
 
 private:
-    bool& called_;
+    int& count_;
 };
 
 TEST(SharedPtr, DefaultConstruct) {
-    static bool called = false;
+    static int calledCount = 0;
 
     {
-        cs::SharedPtr<A> ptr(new A(called));
+        cs::SharedPtr<A> ptr(new A(calledCount));
         ASSERT_EQ(ptr.useCount(), 1);
     }
 
-    ASSERT_TRUE(called);
+    ASSERT_EQ(calledCount, 1);
 }
 
 TEST(SharedPtr, CopyConstruct) {
-    static bool called = false;
+    static int calledCount = 0;
 
-    cs::SharedPtr<A> ptr1(new A(called));
+    cs::SharedPtr<A> ptr1(new A(calledCount));
 
     {
         cs::SharedPtr<A> ptr2 = ptr1;
@@ -37,13 +37,13 @@ TEST(SharedPtr, CopyConstruct) {
     }
 
     ASSERT_EQ(ptr1.useCount(), 1);
-    ASSERT_FALSE(called);
+    ASSERT_EQ(calledCount, 0);
 }
 
 TEST(SharedPtr, MoveConstruct) {
-    static bool called = false;
+    static int calledCount = 0;
 
-    cs::SharedPtr<A> ptr1(new A(called));
+    cs::SharedPtr<A> ptr1(new A(calledCount));
 
     {
         cs::SharedPtr<A> ptr2(std::move(ptr1));
@@ -51,5 +51,5 @@ TEST(SharedPtr, MoveConstruct) {
     }
 
     ASSERT_EQ(ptr1.useCount(), 0); // NOLINT
-    ASSERT_TRUE(called);
+    ASSERT_EQ(calledCount, 1);
 }
