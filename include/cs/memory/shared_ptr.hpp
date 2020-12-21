@@ -105,7 +105,7 @@ typename SharedPtr<T>::ElementType* SharedPtr<T>::get() const {
 
 template <typename T>
 typename SharedPtr<T>::ElementType* SharedPtr<T>::operator->() const {
-    return this->ptr ? this->ptr_ : nullptr;
+    return this->ptr_ ? this->ptr_ : nullptr;
 }
 
 template <typename T>
