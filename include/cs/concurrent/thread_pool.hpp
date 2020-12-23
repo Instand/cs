@@ -45,7 +45,7 @@ private:
     std::queue<Task> tasks_;
     std::vector<std::thread> workers_;
 
-    std::mutex mutex_;
+    mutable std::mutex mutex_;
     std::condition_variable notifier_;
 
     bool stop_ = false;
@@ -92,6 +92,7 @@ inline void ThreadPool::enqueue(F&& f, Args&&... args) {
 }
 
 inline bool ThreadPool::isRunning() const {
+    std::lock_guard lock(mutex_);
     return stop_;
 }
 
