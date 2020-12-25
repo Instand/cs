@@ -44,17 +44,7 @@ protected:
     , id_(watcher.id_) {
     }
 
-    FutureBase& operator=(FutureBase&& watcher) noexcept {
-        if (state_ == WatcherState::Running) {
-            cslog() << "Trying to use operator= in watcher running state\n";
-        }
-
-        future_ = std::move(watcher.future_);
-        policy_ = watcher.policy_;
-        id_ = watcher.id_;
-
-        return *this;
-    }
+    FutureBase& operator=(FutureBase&& watcher) noexcept = delete;
 
 public:
     // returns current watcher state, if watcher never watched runnable entity
@@ -119,12 +109,7 @@ public:
     ~FutureWatcher() = default;
     FutureWatcher(FutureWatcher&&) = default;
 
-    FutureWatcher& operator=(FutureWatcher&& watcher) {
-        FutureBase<Result>::operator=(std::move(watcher));
-
-        watch();
-        return *this;
-    }
+    FutureWatcher& operator=(FutureWatcher&& watcher) = delete;
 
 protected:
     using Super = FutureBase<Result>;
@@ -175,12 +160,7 @@ public:
     ~FutureWatcher() = default;
     FutureWatcher(FutureWatcher&& watcher) = default;
 
-    FutureWatcher& operator=(FutureWatcher&& watcher) noexcept {
-        FutureBase<void>::operator=(std::move(watcher));
-
-        watch();
-        return *this;
-    }
+    FutureWatcher& operator=(FutureWatcher&& watcher) noexcept = delete;
 
 protected:
     using Super = FutureBase<void>;
