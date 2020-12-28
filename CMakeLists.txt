@@ -16,6 +16,17 @@ endif()
 
 add_subdirectory(third-party)
 
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME     ON)
+
+find_package(Boost 1.70.0 COMPONENTS filesystem)
+
+if (Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    add_definitions(-DBOOST_EXISTS)
+endif()
+
 if (IS_TOPLEVEL_PROJECT)
     enable_testing()
     add_subdirectory(tests)
@@ -31,7 +42,6 @@ target_include_directories(${PROJECT_NAME}
         INTERFACE
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:include>)
-
 
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}Config)
