@@ -225,8 +225,7 @@ private:
     friend class Connector;
 };
 
-// helper namespace
-namespace Args {
+namespace details {
 template <typename T>
 struct GetArguments : GetArguments<decltype(&T::operator())> {};
 
@@ -350,7 +349,7 @@ public:
                          std::placeholders::_6, std::placeholders::_7, std::placeholders::_8, std::placeholders::_9, std::placeholders::_10);
     }
 };
-}  // namespace helper
+}  // namespace details
 
 ///
 /// Signal - slot connection entity
@@ -397,11 +396,11 @@ public:
     ///
     template <template <typename> typename Signal, typename T, typename Object, typename Slot>
     static void connect(const Signal<T>* signal, const Object& slotObj, Slot&& slot) {
-        constexpr int size = Args::GetArguments<Slot>();
+        constexpr int size = details::GetArguments<Slot>();
 
         std::lock_guard lock(mutex_);
         auto obj = Connector::checkConnection(static_cast<const ISignal*>(signal), slotObj, std::is_base_of<IConnectable, std::remove_pointer_t<Object>>());
-        const_cast<Signal<T>*>(signal)->add(Args::CheckArgs<size>().connect(slotObj, std::forward<Slot>(slot)), obj);
+        const_cast<Signal<T>*>(signal)->add(details::CheckArgs<size>().connect(slotObj, std::forward<Slot>(slot)), obj);
     }
 
     ///
@@ -439,8 +438,8 @@ public:
             return false;
         }
 
-        constexpr int size = Args::GetArguments<Slot>();
-        std::function<T> binder = Args::CheckArgs<size>().connect(slotObj, std::forward<Slot>(slot));
+        constexpr int size = details::GetArguments<Slot>();
+        std::function<T> binder = details::CheckArgs<size>().connect(slotObj, std::forward<Slot>(slot));
 
         std::lock_guard lock(mutex_);
         auto& content = const_cast<Signal<T>*>(signal)->content();
