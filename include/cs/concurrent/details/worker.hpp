@@ -3,15 +3,17 @@
 
 #include <thread>
 
-#include <cs/concurrent/detail/common.hpp>
+#include <cs/concurrent/details/common.hpp>
 #include <cs/concurrent/thread_pool.hpp>
 
 namespace cs {
 template <typename T>
-class FutureBase;
-
-template <typename T>
 class FutureWatcher;
+class Concurrent;
+
+namespace details {
+template <typename T>
+class FutureBase;
 
 // concurrent private helper
 class Worker {
@@ -47,9 +49,10 @@ private:
     friend class FutureBase;
 
     template <typename T>
-    friend class FutureWatcher;
-    friend class Concurrent;
+    friend class cs::FutureWatcher;
+    friend class cs::Concurrent;
 };
+} // details
 }
 
 #endif // WORKER_HPP

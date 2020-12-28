@@ -58,13 +58,13 @@ public:
         const auto timePoint = std::chrono::steady_clock::now() + ms;
         auto binder = std::bind(&Concurrent::runAfterHelper<Func>, timePoint, std::forward(callBack));
 
-        Worker::execute(policy, std::move(binder));
+        details::Worker::execute(policy, std::move(binder));
     }
 
     // executes function in other threads by run policy
     template <typename Func>
     static void execute(cs::RunPolicy policy, Func&& function) {
-        Worker::execute(policy, std::forward<Func>(function));
+        details::Worker::execute(policy, std::forward<Func>(function));
     }
 
 private:
