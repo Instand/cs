@@ -36,7 +36,7 @@ inline Logger& operator<<(Logger& logger, const T& value) {
     return logger;
 }
 
-#define cslog Logger()
+#define cslog cs::Logger()
 }
 
 #endif // LOGGER_HPP
