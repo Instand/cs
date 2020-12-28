@@ -17,10 +17,10 @@ class Concurrent;
 // policy used to control backend future to await result
 template <typename Result>
 class FutureWatcher : public details::FutureBase<Result> {
-public:
     using FinishSignal = cs::Signal<void(const Result&)>;
     using FailedSignal = cs::Signal<void()>;
 
+public:
     explicit FutureWatcher(RunPolicy policy, Future<Result>&& future):
         details::FutureBase<Result>(policy, std::move(future)) {
         watch();
@@ -69,10 +69,10 @@ public signals:
 
 template <>
 class FutureWatcher<void> : public details::FutureBase<void> {
-public:
     using FinishSignal = cs::Signal<void()>;
     using FailedSignal = cs::Signal<void()>;
 
+public:
     explicit FutureWatcher(RunPolicy policy, Future<void>&& future):
         details::FutureBase<void>(policy, std::move(future)) {
         watch();
