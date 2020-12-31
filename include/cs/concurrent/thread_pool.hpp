@@ -1,11 +1,6 @@
 #ifndef THREAD_POOL_HPP
 #define THREAD_POOL_HPP
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4996)
-#endif
-
 #include <vector>
 #include <queue>
 #include <future>
@@ -21,7 +16,7 @@ public:
 
     // adds new task to queue and returns future to get task result
     template<class F, class... Args>
-    std::future<typename std::result_of<F(Args...)>::type> enqueueFuture(F&& f, Args&&... args);
+    std::future<std::invoke_result_t<F, Args...>> enqueueFuture(F&& f, Args&&... args);
 
     // adds new task to queue without future result
     template<class F, class... Args>
@@ -73,8 +68,8 @@ inline ThreadPool::~ThreadPool() {
 }
 
 template<class F, class... Args>
-inline std::future<typename std::result_of<F(Args...)>::type> ThreadPool::enqueueFuture(F&& f, Args&&... args) {
-    using ResultType = typename std::result_of<F(Args...)>::type;
+inline std::future<std::invoke_result_t<F, Args...>> ThreadPool::enqueueFuture(F&& f, Args&&... args) {
+    using ResultType = std::invoke_result_t<F, Args...>;
 
     const auto task = std::make_shared<std::packaged_task<ResultType()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
     auto res = task->get_future();
@@ -140,9 +135,5 @@ inline void ThreadPool::routine() {
     }
 }
 }
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
 
 #endif  // THREAD_POOL_HPP
