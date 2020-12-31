@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(test_program)
+add_subdirectory(test_benchmark)
 
 file(GLOB SRCS *.cpp)
 
