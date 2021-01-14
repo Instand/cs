@@ -3,7 +3,7 @@
 
 #include <cs/memory/details/ref_count_base.hpp>
 
-namespace cs {
+namespace cs::details {
 template<typename T>
 class RefCount : public RefCountBase {
 public:

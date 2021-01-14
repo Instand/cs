@@ -7,8 +7,8 @@
 namespace cs {
 // represents smart pointer with reference count
 template <typename T>
-class SharedPtr : public PtrBase<T> {
-    using SharedPtrBase = PtrBase<T>;
+class SharedPtr : public details::PtrBase<T> {
+    using SharedPtrBase = details::PtrBase<T>;
 
 public:
     using ElementType = typename SharedPtrBase::ElementType;
@@ -46,7 +46,7 @@ public:
 template <typename T>
 SharedPtr<T>::SharedPtr(T* value) {
     this->ptr_ = value;
-    this->refCountBase_ = new RefCount(value);
+    this->refCountBase_ = new details::RefCount(value);
 }
 
 template <typename T>
@@ -55,7 +55,7 @@ SharedPtr<T>::~SharedPtr() {
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(const SharedPtr& ptr) {
+SharedPtr<T>::SharedPtr(const SharedPtr& ptr):SharedPtr() {
     this->copyConstruct(ptr);
 }
 

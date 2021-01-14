@@ -3,7 +3,7 @@
 
 #include <atomic>
 
-namespace cs {
+namespace cs::details {
 class RefCountBase {
 public:
     RefCountBase() = default;

@@ -9,6 +9,7 @@ namespace cs {
 template <typename T>
 class SharedPtr;
 
+namespace details {
 // represents base class for smart pointers with reference count
 template <typename T>
 class PtrBase {
@@ -81,6 +82,7 @@ template <typename T>
 void PtrBase<T>::swap(PtrBase& ptr) {
     std::swap(ptr_, ptr.ptr_);
     std::swap(refCountBase_, ptr.refCountBase_);
+}
 }
 }
 
