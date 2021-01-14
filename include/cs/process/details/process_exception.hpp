@@ -1,5 +1,5 @@
-#ifndef PROCESSEXCEPTION_HPP
-#define PROCESSEXCEPTION_HPP
+#ifndef CS_PROCESSEXCEPTION_HPP
+#define CS_PROCESSEXCEPTION_HPP
 
 #include <string>
 #include <exception>
@@ -31,4 +31,4 @@ private:
 } // namespace details
 }
 
-#endif // PROCESSEXCEPTION_HPP
+#endif // CS_PROCESSEXCEPTION_HPP

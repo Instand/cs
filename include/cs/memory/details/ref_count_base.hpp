@@ -1,5 +1,5 @@
-#ifndef REF_COUNT_BASE_HPP
-#define REF_COUNT_BASE_HPP
+#ifndef CS_REF_COUNT_BASE_HPP
+#define CS_REF_COUNT_BASE_HPP
 
 #include <atomic>
 
@@ -39,4 +39,4 @@ int RefCountBase::useCount() const {
 }
 }
 
-#endif // REF_COUNT_BASE_HPP
+#endif // CS_REF_COUNT_BASE_HPP

@@ -1,5 +1,5 @@
-#ifndef CONCURRENT_COMMON_HPP
-#define CONCURRENT_COMMON_HPP
+#ifndef CS_CONCURRENT_COMMON_HPP
+#define CS_CONCURRENT_COMMON_HPP
 
 #include <future>
 
@@ -20,4 +20,4 @@ template <typename T>
 using Future = std::future<T>;
 }
 
-#endif // CONCURRENT_COMMON_HPP
+#endif // CS_CONCURRENT_COMMON_HPP

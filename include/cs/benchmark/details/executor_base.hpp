@@ -1,5 +1,5 @@
-#ifndef CS_EXECUTOR_BASE_HPP
-#define CS_EXECUTOR_BASE_HPP
+#ifndef CS_BENCHMARK_EXECUTOR_BASE_HPP
+#define CS_BENCHMARK_EXECUTOR_BASE_HPP
 
 #include <chrono>
 #include <memory>
@@ -59,4 +59,4 @@ protected:
 };
 }
 
-#endif // CS_EXECUTOR_BASE_HPP
+#endif // CS_BENCHMARK_EXECUTOR_BASE_HPP

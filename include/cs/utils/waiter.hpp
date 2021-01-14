@@ -1,5 +1,5 @@
-#ifndef WAITER_HPP
-#define WAITER_HPP
+#ifndef CS_WAITER_HPP
+#define CS_WAITER_HPP
 
 #include <chrono>
 #include <thread>
@@ -31,4 +31,4 @@ public:
 };
 }
 
-#endif // WAITER_HPP
+#endif // CS_WAITER_HPP

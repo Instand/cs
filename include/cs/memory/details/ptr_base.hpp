@@ -1,5 +1,5 @@
-#ifndef PTR_BASE_HPP
-#define PTR_BASE_HPP
+#ifndef CS_PTR_BASE_HPP
+#define CS_PTR_BASE_HPP
 
 #include <type_traits>
 
@@ -86,4 +86,4 @@ void PtrBase<T>::swap(PtrBase& ptr) {
 }
 }
 
-#endif // PTR_BASE_HPP
+#endif // CS_PTR_BASE_HPP

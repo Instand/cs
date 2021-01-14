@@ -1,5 +1,5 @@
-#ifndef LOGGER_HPP
-#define LOGGER_HPP
+#ifndef CS_LOGGER_HPP
+#define CS_LOGGER_HPP
 
 #include <iostream>
 #include <sstream>
@@ -39,4 +39,4 @@ inline Logger& operator<<(Logger& logger, const T& value) {
 #define cslog cs::Logger()
 }
 
-#endif // LOGGER_HPP
+#endif // CS_LOGGER_HPP

@@ -1,5 +1,5 @@
-#ifndef CS__EXECUTOR_HPP
-#define CS__EXECUTOR_HPP
+#ifndef CS_BENCHMARK_EXECUTOR_HPP
+#define CS_BENCHMARK_EXECUTOR_HPP
 
 #include <cs/benchmark/details/executor_base.hpp>
 
@@ -67,4 +67,4 @@ private:
 };
 }
 
-#endif // CS__EXECUTOR_HPP
+#endif // CS_BENCHMARK_EXECUTOR_HPP

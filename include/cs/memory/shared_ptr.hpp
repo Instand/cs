@@ -1,5 +1,5 @@
-#ifndef SHARED_PTR_HPP
-#define SHARED_PTR_HPP
+#ifndef CS_SHARED_PTR_HPP
+#define CS_SHARED_PTR_HPP
 
 #include <cs/memory/details/ptr_base.hpp>
 #include <cs/memory/details/ref_count.hpp>
@@ -114,4 +114,4 @@ void SharedPtr<T>::swap(SharedPtr& ptr) {
 }
 }
 
-#endif // SHARED_PTR_HPP
+#endif // CS_SHARED_PTR_HPP

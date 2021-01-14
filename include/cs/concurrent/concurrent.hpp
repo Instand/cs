@@ -1,5 +1,5 @@
-#ifndef CONCURRENT_HPP
-#define CONCURRENT_HPP
+#ifndef CS_CONCURRENT_HPP
+#define CS_CONCURRENT_HPP
 
 #include <list>
 
@@ -78,4 +78,4 @@ private:
 };
 }
 
-#endif // CONCURRRENT_HPP
+#endif // CS_CONCURRRENT_HPP

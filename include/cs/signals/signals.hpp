@@ -1,5 +1,5 @@
-#ifndef SIGNALS_HPP
-#define SIGNALS_HPP
+#ifndef CS_SIGNALS_HPP
+#define CS_SIGNALS_HPP
 
 #include <vector>
 #include <mutex>
@@ -545,4 +545,4 @@ inline void details::ConnectorForwarder::disconnect(const ISignal* signal, const
 
 }  // namespace cs
 
-#endif  // SIGNALS_HPP
+#endif  // CS_SIGNALS_HPP

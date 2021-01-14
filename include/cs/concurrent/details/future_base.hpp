@@ -1,5 +1,5 @@
-#ifndef FUTURE_BASE_HPP
-#define FUTURE_BASE_HPP
+#ifndef CS_FUTURE_BASE_HPP
+#define CS_FUTURE_BASE_HPP
 
 #include <memory>
 
@@ -87,4 +87,4 @@ protected signals:
 } // namespace details
 }
 
-#endif // FUTURE_BASE_HPP
+#endif // CS_FUTURE_BASE_HPP

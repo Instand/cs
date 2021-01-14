@@ -1,5 +1,5 @@
-#ifndef THREAD_POOL_HPP
-#define THREAD_POOL_HPP
+#ifndef CS_THREAD_POOL_HPP
+#define CS_THREAD_POOL_HPP
 
 #include <vector>
 #include <queue>
@@ -136,4 +136,4 @@ inline void ThreadPool::routine() {
 }
 }
 
-#endif  // THREAD_POOL_HPP
+#endif  // CS_THREAD_POOL_HPP

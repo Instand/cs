@@ -1,5 +1,5 @@
-#ifndef FUTURE_HPP
-#define FUTURE_HPP
+#ifndef CS_FUTURE_HPP
+#define CS_FUTURE_HPP
 
 #include <cstddef>
 #include <future>
@@ -124,4 +124,4 @@ template <typename T>
 using FutureWatcherPtr = std::shared_ptr<FutureWatcher<T>>;
 }
 
-#endif // FUTURE_HPP
+#endif // CS_FUTURE_HPP

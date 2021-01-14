@@ -1,5 +1,5 @@
-#ifndef REF_COUNT_HPP
-#define REF_COUNT_HPP
+#ifndef CS_REF_COUNT_HPP
+#define CS_REF_COUNT_HPP
 
 #include <cs/memory/details/ref_count_base.hpp>
 
@@ -27,4 +27,4 @@ void RefCount<T>::deleteThis() noexcept {
 }
 }
 
-#endif // REF_COUNT_HPP
+#endif // CS_REF_COUNT_HPP

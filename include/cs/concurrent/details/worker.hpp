@@ -1,5 +1,5 @@
-#ifndef WORKER_HPP
-#define WORKER_HPP
+#ifndef CS_WORKER_HPP
+#define CS_WORKER_HPP
 
 #include <thread>
 
@@ -55,4 +55,4 @@ private:
 } // details
 }
 
-#endif // WORKER_HPP
+#endif // CS_WORKER_HPP
