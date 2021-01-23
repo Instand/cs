@@ -17,8 +17,16 @@ public:
 
     int useCount() const;
 
+    void incrementWeak();
+    void decrementWeak();
+
+    int weakCount() const;
+
+    bool incrementNotZero();
+
 private:
     std::atomic<int> count_ = { 1 };
+    std::atomic<int> weakCount_ = { 1 };
 };
 
 void RefCountBase::increment() {
@@ -30,13 +38,43 @@ void RefCountBase::decrement() {
 
     if (useCount() == 0) {
         deleteElement();
-        deleteThis();
+        decrementWeak();
     }
 }
 
 int RefCountBase::useCount() const {
     return count_.load();
 }
+
+void RefCountBase::incrementWeak() {
+    weakCount_.fetch_add(1);
+}
+
+void RefCountBase::decrementWeak() {
+    weakCount_.fetch_sub(1);
+
+    if (weakCount() == 0) {
+        deleteThis();
+    }
+}
+
+int RefCountBase::weakCount() const {
+    return weakCount_.load();
+}
+
+bool RefCountBase::incrementNotZero() {
+    auto current = count_.load(std::memory_order_seq_cst);
+
+    if (current == 0) {
+        return false;
+    }
+
+    while (!count_.compare_exchange_weak(current, current + 1,
+                                         std::memory_order_release,
+                                         std::memory_order_relaxed));
+    return true;
+}
+
 }
 
 #endif // CS_REF_COUNT_BASE_HPP

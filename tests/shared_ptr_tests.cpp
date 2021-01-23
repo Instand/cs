@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <cs/memory/shared_ptr.hpp>
+#include <cs/memory/weak_ptr.hpp>
 
 class A {
 public:
@@ -110,4 +111,25 @@ TEST(SharedPtr, ArrowOperator) {
     ptr->bar();
 
     ASSERT_TRUE(called);
+}
+
+TEST(WeakPtr, DefaultConstruct) {
+    int calledCount = 0;
+    cs::WeakPtr<A>{};
+
+    ASSERT_EQ(calledCount, 0);
+}
+
+TEST(WeakPtr, ConstructFromSharedPtr) {
+    int calledCount = 0;
+
+    {
+        cs::SharedPtr<A> sharedPtr(new A(calledCount));
+        cs::WeakPtr<A> weakPtr(sharedPtr);
+
+        ASSERT_EQ(weakPtr.useCount(), 1);
+        ASSERT_EQ(weakPtr.weakCount(), 2);
+    }
+
+    ASSERT_EQ(calledCount, 1);
 }
