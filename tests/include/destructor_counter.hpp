@@ -4,13 +4,13 @@
 namespace cs::testing {
 class DestructorCounter {
 public:
-    explicit DestructorCounter() = default;
+    explicit DestructorCounter(int& value):count_(value) {};
     ~DestructorCounter() { ++count_; }
 
-    static int count() { return count_; }
+    int count() const { return count_; }
 
 private:
-    inline static int count_ = 0;
+    int& count_;
 };
 }
 

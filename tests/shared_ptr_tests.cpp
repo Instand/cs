@@ -8,16 +8,19 @@
 using namespace cs::testing;
 
 TEST(SharedPtr, DefaultConstruct) {
+    auto calledCount = 0;
+
     {
-        cs::SharedPtr<DestructorCounter> ptr(new DestructorCounter());
+        cs::SharedPtr<DestructorCounter> ptr(new DestructorCounter(calledCount));
         ASSERT_EQ(ptr.useCount(), 1);
     }
 
-    ASSERT_EQ(DestructorCounter::count(), 1);
+    ASSERT_EQ(calledCount, 1);
 }
 
 TEST(SharedPtr, CopyConstruct) {
-    cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
+    auto calledCount = 0;
+    cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter(calledCount));
 
     {
         cs::SharedPtr<DestructorCounter> ptr2 = ptr1;
@@ -25,11 +28,12 @@ TEST(SharedPtr, CopyConstruct) {
     }
 
     ASSERT_EQ(ptr1.useCount(), 1);
-    ASSERT_EQ(DestructorCounter::count(), 0);
+    ASSERT_EQ(calledCount, 0);
 }
 
 TEST(SharedPtr, MoveConstruct) {
-    cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
+    auto calledCount = 0;
+    cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter(calledCount));
 
     {
         cs::SharedPtr<DestructorCounter> ptr2(std::move(ptr1));
@@ -37,38 +41,42 @@ TEST(SharedPtr, MoveConstruct) {
     }
 
     ASSERT_EQ(ptr1.useCount(), 0); // NOLINT
-    ASSERT_EQ(DestructorCounter::count(), 1);
+    ASSERT_EQ(calledCount, 1);
 }
 
 TEST(SharedPtr, CopyOperator) {
+    auto calledCount = 0;
+
     {
-        cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
-        cs::SharedPtr<DestructorCounter> ptr2(new DestructorCounter());
+        cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter(calledCount));
+        cs::SharedPtr<DestructorCounter> ptr2(new DestructorCounter(calledCount));
 
         ptr2 = ptr1;
 
-        ASSERT_EQ(DestructorCounter::count(), 1);
+        ASSERT_EQ(calledCount, 1);
         ASSERT_EQ(ptr2.get(), ptr1.get());
         ASSERT_EQ(ptr2.useCount(), 2);
         ASSERT_EQ(ptr1.useCount(), 2);
     }
 
-    ASSERT_EQ(DestructorCounter::count(), 2);
+    ASSERT_EQ(calledCount, 2);
 }
 
 TEST(SharedPtr, MoveOperator) {
+    auto calledCount = 0;
+
     {
-        cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
-        cs::SharedPtr<DestructorCounter> ptr2(new DestructorCounter());
+        cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter(calledCount));
+        cs::SharedPtr<DestructorCounter> ptr2(new DestructorCounter(calledCount));
 
         ptr2 = std::move(ptr1);
 
-        ASSERT_EQ(DestructorCounter::count(), 1);
+        ASSERT_EQ(calledCount, 1);
         ASSERT_EQ(ptr1.useCount(), 0); // NOLINT
         ASSERT_EQ(ptr2.useCount(), 1);
     }
 
-    ASSERT_EQ(DestructorCounter::count(), 2);
+    ASSERT_EQ(calledCount, 2);
 }
 
 TEST(SharedPtr, GetMethod) {
