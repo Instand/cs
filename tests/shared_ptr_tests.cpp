@@ -2,92 +2,73 @@
 
 #include <gtest/gtest.h>
 
+#include <destructor_counter.hpp>
 #include <cs/memory/shared_ptr.hpp>
-#include <cs/memory/weak_ptr.hpp>
 
-class A {
-public:
-    explicit A(int& count):count_(count) {}
-    ~A() {
-        ++count_;
-    }
-
-private:
-    int& count_;
-};
+using namespace cs::testing;
 
 TEST(SharedPtr, DefaultConstruct) {
-    static int calledCount = 0;
-
     {
-        cs::SharedPtr<A> ptr(new A(calledCount));
+        cs::SharedPtr<DestructorCounter> ptr(new DestructorCounter());
         ASSERT_EQ(ptr.useCount(), 1);
     }
 
-    ASSERT_EQ(calledCount, 1);
+    ASSERT_EQ(DestructorCounter::count(), 1);
 }
 
 TEST(SharedPtr, CopyConstruct) {
-    static int calledCount = 0;
-
-    cs::SharedPtr<A> ptr1(new A(calledCount));
+    cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
 
     {
-        cs::SharedPtr<A> ptr2 = ptr1;
+        cs::SharedPtr<DestructorCounter> ptr2 = ptr1;
         ASSERT_EQ(ptr2.useCount(), 2);
     }
 
     ASSERT_EQ(ptr1.useCount(), 1);
-    ASSERT_EQ(calledCount, 0);
+    ASSERT_EQ(DestructorCounter::count(), 0);
 }
 
 TEST(SharedPtr, MoveConstruct) {
-    static int calledCount = 0;
-
-    cs::SharedPtr<A> ptr1(new A(calledCount));
+    cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
 
     {
-        cs::SharedPtr<A> ptr2(std::move(ptr1));
+        cs::SharedPtr<DestructorCounter> ptr2(std::move(ptr1));
         ASSERT_EQ(ptr2.useCount(), 1);
     }
 
     ASSERT_EQ(ptr1.useCount(), 0); // NOLINT
-    ASSERT_EQ(calledCount, 1);
+    ASSERT_EQ(DestructorCounter::count(), 1);
 }
 
 TEST(SharedPtr, CopyOperator) {
-    static int calledCount = 0;
-
     {
-        cs::SharedPtr<A> ptr1(new A(calledCount));
-        cs::SharedPtr<A> ptr2(new A(calledCount));
+        cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
+        cs::SharedPtr<DestructorCounter> ptr2(new DestructorCounter());
 
         ptr2 = ptr1;
 
-        ASSERT_EQ(calledCount, 1);
+        ASSERT_EQ(DestructorCounter::count(), 1);
         ASSERT_EQ(ptr2.get(), ptr1.get());
         ASSERT_EQ(ptr2.useCount(), 2);
         ASSERT_EQ(ptr1.useCount(), 2);
     }
 
-    ASSERT_EQ(calledCount, 2);
+    ASSERT_EQ(DestructorCounter::count(), 2);
 }
 
 TEST(SharedPtr, MoveOperator) {
-    static int calledCount = 0;
-
     {
-        cs::SharedPtr<A> ptr1(new A(calledCount));
-        cs::SharedPtr<A> ptr2(new A(calledCount));
+        cs::SharedPtr<DestructorCounter> ptr1(new DestructorCounter());
+        cs::SharedPtr<DestructorCounter> ptr2(new DestructorCounter());
 
         ptr2 = std::move(ptr1);
 
-        ASSERT_EQ(calledCount, 1);
+        ASSERT_EQ(DestructorCounter::count(), 1);
         ASSERT_EQ(ptr1.useCount(), 0); // NOLINT
         ASSERT_EQ(ptr2.useCount(), 1);
     }
 
-    ASSERT_EQ(calledCount, 2);
+    ASSERT_EQ(DestructorCounter::count(), 2);
 }
 
 TEST(SharedPtr, GetMethod) {
@@ -113,23 +94,6 @@ TEST(SharedPtr, ArrowOperator) {
     ASSERT_TRUE(called);
 }
 
-TEST(WeakPtr, DefaultConstruct) {
-    int calledCount = 0;
-    cs::WeakPtr<A>{};
+TEST(SharedPtr, ConstructFromWeakPtr) {
 
-    ASSERT_EQ(calledCount, 0);
-}
-
-TEST(WeakPtr, ConstructFromSharedPtr) {
-    int calledCount = 0;
-
-    {
-        cs::SharedPtr<A> sharedPtr(new A(calledCount));
-        cs::WeakPtr<A> weakPtr(sharedPtr);
-
-        ASSERT_EQ(weakPtr.useCount(), 1);
-        ASSERT_EQ(weakPtr.weakCount(), 2);
-    }
-
-    ASSERT_EQ(calledCount, 1);
 }
