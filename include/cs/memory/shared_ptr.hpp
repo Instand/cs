@@ -1,10 +1,13 @@
 #ifndef CS_SHARED_PTR_HPP
 #define CS_SHARED_PTR_HPP
 
+#include <cs/memory/details/bad_weak_ptr.hpp>
 #include <cs/memory/details/ptr_base.hpp>
 #include <cs/memory/details/ref_count.hpp>
 
 namespace cs {
+using BadWeakPtrException = details::BadWeakPtrException;
+
 // represents smart pointer with reference count
 template <typename T>
 class SharedPtr : public details::PtrBase<T> {
@@ -30,10 +33,13 @@ public:
     SharedPtr(SharedPtr<Type>&& ptr);
 
     template <typename Type>
+    explicit SharedPtr(const WeakPtr<Type>& ptr);
+
+    template <typename Type>
     SharedPtr& operator=(const SharedPtr<Type>& ptr);
 
     template <typename Type>
-    SharedPtr& operator=(SharedPtr<Type>&& type);
+    SharedPtr& operator=(SharedPtr<Type>&& ptr);
 
     // returns element ptr
     ElementType* get() const;
@@ -84,6 +90,13 @@ SharedPtr<T>::SharedPtr(const SharedPtr<Type>& ptr) {
 template <typename T> template <typename Type>
 SharedPtr<T>::SharedPtr(SharedPtr<Type>&& ptr) {
     this->moveConstruct(std::move(ptr));
+}
+
+template <typename T> template <typename Type>
+SharedPtr<T>::SharedPtr(const WeakPtr<Type>& ptr) {
+    if (!this->constructFromWeak(ptr)) {
+        throw BadWeakPtrException();
+    }
 }
 
 template <typename T> template <typename Type>
