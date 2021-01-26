@@ -29,11 +29,11 @@ private:
     std::atomic<int> weakCount_ = { 1 };
 };
 
-void RefCountBase::increment() {
+inline void RefCountBase::increment() {
     count_.fetch_add(1);
 }
 
-void RefCountBase::decrement() {
+inline void RefCountBase::decrement() {
     count_.fetch_sub(1);
 
     if (useCount() == 0) {
@@ -42,15 +42,15 @@ void RefCountBase::decrement() {
     }
 }
 
-int RefCountBase::useCount() const {
+inline int RefCountBase::useCount() const {
     return count_.load();
 }
 
-void RefCountBase::incrementWeak() {
+inline void RefCountBase::incrementWeak() {
     weakCount_.fetch_add(1);
 }
 
-void RefCountBase::decrementWeak() {
+inline void RefCountBase::decrementWeak() {
     weakCount_.fetch_sub(1);
 
     if (weakCount() == 0) {
@@ -58,11 +58,11 @@ void RefCountBase::decrementWeak() {
     }
 }
 
-int RefCountBase::weakCount() const {
+inline int RefCountBase::weakCount() const {
     return weakCount_.load();
 }
 
-bool RefCountBase::incrementNotZero() {
+inline bool RefCountBase::incrementNotZero() {
     auto current = count_.load(std::memory_order_seq_cst);
 
     if (current == 0) {
