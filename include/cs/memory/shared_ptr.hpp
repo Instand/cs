@@ -1,9 +1,12 @@
 #ifndef CS_SHARED_PTR_HPP
 #define CS_SHARED_PTR_HPP
 
+#include <type_traits>
+
 #include <cs/memory/details/bad_weak_ptr.hpp>
 #include <cs/memory/details/ptr_base.hpp>
 #include <cs/memory/details/ref_count.hpp>
+#include <cs/memory/details/ref_count_source.hpp>
 
 namespace cs {
 using BadWeakPtrException = details::BadWeakPtrException;
@@ -17,7 +20,12 @@ public:
     using ElementType = typename SharedPtrBase::ElementType;
 
     SharedPtr() noexcept = default;
-    explicit SharedPtr(T* value);
+
+    template <typename Type>
+    explicit SharedPtr(Type* value);
+
+    template<typename Type, typename Deleter>
+    explicit SharedPtr(Type* value, Deleter deleter);
     ~SharedPtr();
 
     SharedPtr(const SharedPtr& ptr);
@@ -49,10 +57,23 @@ public:
     void swap(SharedPtr& ptr);
 };
 
-template <typename T>
-SharedPtr<T>::SharedPtr(T* value) {
+template <typename T> template <typename Type>
+SharedPtr<T>::SharedPtr(Type* value) {
     this->ptr_ = value;
-    this->refCountBase_ = new details::RefCount(value);
+
+    if constexpr (std::is_array_v<T>) {
+        auto deleter = [](ElementType* ptr) { delete[] ptr; };
+        this->refCountBase_ = new details::RefCountSource<ElementType, decltype(deleter)>(value, deleter);
+    }
+    else {
+        this->refCountBase_ = new details::RefCount(value);
+    }
+}
+
+template <typename T> template <typename Type, typename Deleter>
+SharedPtr<T>::SharedPtr(Type* value, Deleter deleter) {
+    this->ptr_ = value;
+    this->refCountBase_ = new details::RefCountSource<T, decltype(deleter)>(value, deleter);
 }
 
 template <typename T>
