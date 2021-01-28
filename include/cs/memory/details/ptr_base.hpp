@@ -118,7 +118,7 @@ void PtrBase<T>::decrementWeak() const {
 
 template <typename T> template <typename Type>
 bool PtrBase<T>::constructFromWeak(const PtrBase<Type>& ptrBase) {
-    if (ptrBase.refCountBase_ && ptrBase.refCountBase_->incremenNotZero()) {
+    if (ptrBase.refCountBase_ && ptrBase.refCountBase_->incrementNotZero()) {
         ptr_ = ptrBase.ptr_;
         refCountBase_ = ptrBase.refCountBase_;
 
