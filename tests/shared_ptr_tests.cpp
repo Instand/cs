@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 
 #include <destructor_counter.hpp>
+
+#include <cs/memory/weak_ptr.hpp>
 #include <cs/memory/shared_ptr.hpp>
 
 using namespace cs::testing;
@@ -102,6 +104,78 @@ TEST(SharedPtr, ArrowOperator) {
     ASSERT_TRUE(called);
 }
 
-TEST(SharedPtr, ConstructFromWeakPtr) {
+TEST(SharedPtr, ConstructFromWeakPtrBad) {
+    bool exceptionCatched = false;
 
+    {
+        try {
+            cs::WeakPtr<int> weakPtr;
+            cs::SharedPtr<int> sharedPtr(weakPtr);
+        }
+        catch (const cs::BadWeakPtrException& e) {
+            exceptionCatched = true;
+        }
+    }
+
+    ASSERT_TRUE(exceptionCatched);
+}
+
+TEST(SharedPtr, ConstructFromWeakPtrOk) {
+    bool exceptionCatched = false;
+
+    {
+        try {
+            cs::SharedPtr<int> sharedPtr(new int{});
+            cs::WeakPtr<int> weakPtr(sharedPtr);
+
+            cs::SharedPtr<int> sharedPtrOk(weakPtr);
+
+            ASSERT_EQ(weakPtr.expired(), false);
+            ASSERT_EQ(weakPtr.useCount(), 2);
+            ASSERT_EQ(weakPtr.weakCount(), 2);
+        }
+        catch (const cs::BadWeakPtrException& e) {
+            exceptionCatched = true;
+        }
+    }
+
+    ASSERT_FALSE(exceptionCatched);
+}
+
+TEST(SharedPtr, DefaultArray) {
+    auto calledCount = 0;
+
+    {
+        const auto array = new DestructorCounter[3] {
+                DestructorCounter(calledCount),
+                DestructorCounter(calledCount),
+                DestructorCounter(calledCount)
+        };
+
+        cs::SharedPtr<DestructorCounter[]> sharedPtr1(array);
+
+        {
+            const auto sharedPtr2 = sharedPtr1;
+            ASSERT_EQ(sharedPtr2.useCount(), 2);
+        }
+
+        ASSERT_EQ(sharedPtr1.useCount(), 1);
+        ASSERT_EQ(calledCount, 0);
+    }
+
+    ASSERT_EQ(calledCount, 3);
+}
+
+TEST(SharedPtr, CustomDeleter) {
+    auto calledCount = 0;
+
+    {
+        cs::SharedPtr<DestructorCounter> sharedPtr(new DestructorCounter(calledCount), [](auto ptr) { delete ptr; });
+
+        ASSERT_EQ(sharedPtr.useCount(), 1);
+        ASSERT_EQ(sharedPtr.weakCount(), 1);
+        ASSERT_EQ(calledCount, 0);
+    }
+
+    ASSERT_EQ(calledCount, 1);
 }
