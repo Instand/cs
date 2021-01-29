@@ -112,7 +112,7 @@ TEST(SharedPtr, ConstructFromWeakPtrBad) {
             cs::WeakPtr<int> weakPtr;
             cs::SharedPtr<int> sharedPtr(weakPtr);
         }
-        catch (const cs::BadWeakPtrException& e) {
+        catch (const cs::BadWeakPtrException&) {
             exceptionCatched = true;
         }
     }
@@ -134,7 +134,7 @@ TEST(SharedPtr, ConstructFromWeakPtrOk) {
             ASSERT_EQ(weakPtr.useCount(), 2);
             ASSERT_EQ(weakPtr.weakCount(), 2);
         }
-        catch (const cs::BadWeakPtrException& e) {
+        catch (const cs::BadWeakPtrException&) {
             exceptionCatched = true;
         }
     }
