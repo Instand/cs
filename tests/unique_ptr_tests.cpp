@@ -113,7 +113,7 @@ TEST(UniquePtr, Release) {
         counter = ptr.release();
     }
 
-    ASSERT_EQ(calledCount, 0);
+    ASSERT_EQ(calledCount, 0);  // NOLINT
     delete counter;
     ASSERT_EQ(calledCount, 1);
 }
