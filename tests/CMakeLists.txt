@@ -110,7 +110,6 @@ add_executable(${TEST_NAME} ${SRCS}
     include/destructor_counter.hpp)
 
 target_include_directories(${TEST_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
