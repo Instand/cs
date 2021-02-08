@@ -52,6 +52,9 @@ public:
     // returns element ptr
     ElementType* get() const;
     ElementType* operator->() const;
+    operator bool() const;
+
+    void reset(ElementType* value = nullptr);
 
     // swaps with other shared pointer
     void swap(SharedPtr& ptr);
@@ -140,6 +143,22 @@ typename SharedPtr<T>::ElementType* SharedPtr<T>::get() const {
 template <typename T>
 typename SharedPtr<T>::ElementType* SharedPtr<T>::operator->() const {
     return this->ptr_ ? this->ptr_ : nullptr;
+}
+
+template <typename T>
+SharedPtr<T>::operator bool() const {
+    return static_cast<bool>(this->ptr_);
+}
+
+template <typename T>
+void SharedPtr<T>::reset(ElementType* value) {
+    SharedPtr<T> ptr;
+
+    if (value != nullptr) {
+        ptr = SharedPtr<T>(value);
+    }
+
+    ptr.swap(*this);
 }
 
 template <typename T>

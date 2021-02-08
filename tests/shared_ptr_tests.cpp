@@ -179,3 +179,27 @@ TEST(SharedPtr, CustomDeleter) {
 
     ASSERT_EQ(calledCount, 1);
 }
+
+TEST(SharedPtr, Reset) {
+    cs::SharedPtr<int> ptr1(new int(1));
+
+    {
+        cs::SharedPtr<int> ptr2 = ptr1;
+        ptr2.reset(new int(2));
+
+        ASSERT_EQ(*ptr2.get(), 2);
+    }
+
+    ASSERT_EQ(*ptr1.get(), 1);
+}
+
+TEST(SharedPtr, OperatorBool) {
+    cs::SharedPtr<int> ptr1;
+
+    {
+        cs::SharedPtr<int> ptr2(new int{});
+        ASSERT_TRUE(static_cast<bool>(ptr2));
+    }
+
+    ASSERT_FALSE(static_cast<bool>(ptr1));
+}
