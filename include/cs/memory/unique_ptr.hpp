@@ -1,9 +1,8 @@
 #ifndef CS_UNIQUE_PTR
 #define CS_UNIQUE_PTR
 
-#include <utility>
-
 #include <cs/utils/default_delete.hpp>
+#include <cs/utils/compressed_pair.hpp>
 
 namespace cs {
 template <typename T, typename Deleter = cs::DefaultDelete<T>>
@@ -11,10 +10,14 @@ class UniquePtr {
 public:
     using ElementType = std::remove_all_extents_t<T>;
 
-    UniquePtr() = default;
+    UniquePtr();
 
     template <typename Type>
     explicit UniquePtr(Type* ptr);
+
+    template <typename Type, typename UserDeleter>
+    explicit UniquePtr(Type* ptr, UserDeleter&& deleter);
+
     ~UniquePtr();
 
     UniquePtr(const UniquePtr&) = delete;
@@ -26,21 +29,27 @@ public:
     void swap(UniquePtr& ptr);
 
 private:
-    ElementType* value_ = nullptr;
+    CompressedPair<Deleter, ElementType*> compressedPair_;
 };
 
+template <typename T, typename Deleter>
+UniquePtr<T, Deleter>::UniquePtr(): compressedPair_(details::SecondArgTag{}, nullptr) {}
+
 template <typename T, typename Deleter> template <typename Type>
-UniquePtr<T, Deleter>::UniquePtr(Type* ptr):value_(ptr) {}
+UniquePtr<T, Deleter>::UniquePtr(Type* ptr): compressedPair_(details::SecondArgTag{}, ptr) {}
+
+template <typename T, typename Deleter> template <typename Type, typename UserDeleter>
+UniquePtr<T, Deleter>::UniquePtr(Type* ptr, UserDeleter&& deleter):
+    compressedPair_(details::BothArgsTag{}, std::forward<UserDeleter>(deleter), ptr) {}
 
 template <typename T, typename Deleter>
 UniquePtr<T, Deleter>::~UniquePtr() {
-    Deleter deleter;
-    deleter(value_);
+    compressedPair_.first()(compressedPair_.second());
 }
 
 template <typename T, typename Deleter>
-UniquePtr<T, Deleter>::UniquePtr(UniquePtr&& ptr): value_(ptr.value_) {
-    ptr.value_ = nullptr;
+UniquePtr<T, Deleter>::UniquePtr(UniquePtr&& ptr): compressedPair_(std::move(ptr.compressedPair_)) {
+    ptr.compressedPair_.second() = nullptr;
 }
 
 template <typename T, typename Deleter>
@@ -51,7 +60,7 @@ UniquePtr<T, Deleter>& UniquePtr<T, Deleter>::operator=(UniquePtr&& ptr) {
 
 template <typename T, typename Deleter>
 void UniquePtr<T, Deleter>::swap(UniquePtr& ptr) {
-    std::swap(value_, ptr.value_);
+    std::swap(compressedPair_, ptr.compressedPair_);
 }
 }
 
