@@ -69,3 +69,26 @@ TEST(UniquePtr, DefaultArrayUsage) {
 
     ASSERT_EQ(calledCount, 2);
 }
+
+TEST(UniquePtr, DefaultDeleterPtrSize) {
+    cs::UniquePtr<DestructorCounter> ptr;
+    void* voidPtr = nullptr;
+
+    ASSERT_EQ(sizeof(ptr), sizeof(voidPtr));
+}
+
+TEST(UniquePtr, LamdaDeleter) {
+    auto value = 0;
+    auto deleter = [&value](auto ptr) {
+        value++;
+        delete ptr;
+    };
+
+    {
+        volatile cs::UniquePtr<int, decltype(deleter)> ptr(new int{}, deleter);
+        EXPECT_EQ(sizeof(ptr), sizeof(deleter) + sizeof(void*));
+        ASSERT_GT(sizeof(ptr), sizeof(void*));
+    }
+
+    ASSERT_EQ(value, 1);
+}
