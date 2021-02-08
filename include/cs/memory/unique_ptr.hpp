@@ -31,6 +31,7 @@ public:
     ElementType* release();
 
     operator bool() const;
+    ElementType* operator->() const;
 
 private:
     CompressedPair<Deleter, ElementType*> compressedPair_;
@@ -86,6 +87,11 @@ typename UniquePtr<T, Deleter>::ElementType* UniquePtr<T, Deleter>::release() {
 template <typename T, typename Deleter>
 UniquePtr<T, Deleter>::operator bool() const {
     return static_cast<bool>(compressedPair_.second());
+}
+
+template <typename T, typename Deleter>
+typename UniquePtr<T, Deleter>::ElementType* UniquePtr<T, Deleter>::operator->() const {
+    return compressedPair_.second();
 }
 }
 

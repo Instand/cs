@@ -128,3 +128,18 @@ TEST(UniquePtr, OperatorBool) {
 
     ASSERT_FALSE(ptr1);
 }
+
+TEST(UniquePtr, OperatorArrow) {
+    static bool called = false;
+
+    struct Foo {
+        void print() { called = true; }
+    };
+
+    {
+        cs::UniquePtr<Foo> ptr(new Foo());
+        ptr->print();
+    }
+
+    ASSERT_TRUE(called);
+}
