@@ -92,3 +92,39 @@ TEST(UniquePtr, LamdaDeleter) {
 
     ASSERT_EQ(value, 1);
 }
+
+TEST(UniquePtr, Reset) {
+    auto calledCount = 0;
+
+    {
+        cs::UniquePtr<DestructorCounter> ptr(new DestructorCounter(calledCount));
+        ptr.reset(new DestructorCounter(calledCount));
+    }
+
+    ASSERT_EQ(calledCount, 2);
+}
+
+TEST(UniquePtr, Release) {
+    auto calledCount = 0;
+    DestructorCounter* counter = nullptr;
+
+    {
+        cs::UniquePtr<DestructorCounter> ptr(new DestructorCounter(calledCount));
+        counter = ptr.release();
+    }
+
+    ASSERT_EQ(calledCount, 0);
+    delete counter;
+    ASSERT_EQ(calledCount, 1);
+}
+
+TEST(UniquePtr, OperatorBool) {
+    cs::UniquePtr<int> ptr1;
+
+    {
+        cs::UniquePtr<int> ptr2(new int{});
+        ASSERT_TRUE(ptr2);
+    }
+
+    ASSERT_FALSE(ptr1);
+}

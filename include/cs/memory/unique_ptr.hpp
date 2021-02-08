@@ -27,6 +27,10 @@ public:
     UniquePtr& operator=(UniquePtr&& ptr);
 
     void swap(UniquePtr& ptr);
+    void reset(ElementType* value = nullptr);
+    ElementType* release();
+
+    operator bool() const;
 
 private:
     CompressedPair<Deleter, ElementType*> compressedPair_;
@@ -61,6 +65,27 @@ UniquePtr<T, Deleter>& UniquePtr<T, Deleter>::operator=(UniquePtr&& ptr) {
 template <typename T, typename Deleter>
 void UniquePtr<T, Deleter>::swap(UniquePtr& ptr) {
     std::swap(compressedPair_, ptr.compressedPair_);
+}
+
+template <typename T, typename Deleter>
+void UniquePtr<T, Deleter>::reset(ElementType* value) {
+    cs::UniquePtr<T, Deleter> ptr(value);
+    swap(ptr);
+}
+
+template <typename T, typename Deleter>
+typename UniquePtr<T, Deleter>::ElementType* UniquePtr<T, Deleter>::release() {
+    auto value = compressedPair_.second();
+
+    compressedPair_.first() = {};
+    compressedPair_.second() = nullptr;
+
+    return value;
+}
+
+template <typename T, typename Deleter>
+UniquePtr<T, Deleter>::operator bool() const {
+    return static_cast<bool>(compressedPair_.second());
 }
 }
 
