@@ -16,7 +16,13 @@ public:
     using reference = T&;
     using const_reference = const T&;
 
+    ForwardList() = default;
+    ForwardList(const ForwardList& list);
+    ForwardList(ForwardList&& list);
     ~ForwardList();
+
+    ForwardList& operator=(const ForwardList& list);
+    ForwardList& operator=(ForwardList&& list);
 
     void clear();
 
@@ -36,6 +42,8 @@ public:
 
     reference front();
     const_reference front() const;
+
+    void swap(ForwardList& list);
 
 private:
     void defaultState();
@@ -65,6 +73,31 @@ private:
     Node* head_ = nullptr;
     size_t size_ = 0;
 };
+
+template <typename T>
+ForwardList<T>::ForwardList(const ForwardList& list) {
+    for (const auto& element : list) {
+        pushFront(element);
+    }
+}
+
+template <typename T>
+ForwardList<T>::ForwardList(ForwardList&& list):
+    head_(list.head_), size_(list.size_) {
+    list.defaultState();
+}
+
+template <typename T>
+ForwardList<T>& ForwardList<T>::operator=(const ForwardList& list) {
+    ForwardList<T>(list).swap(*this);
+    return *this;
+}
+
+template <typename T>
+ForwardList<T>& ForwardList<T>::operator=(ForwardList&& list) {
+    ForwardList<T>(std::move(list)).swap(*this);
+    return *this;
+}
 
 template <typename T>
 ForwardList<T>::~ForwardList() {
@@ -169,6 +202,12 @@ template <typename T>
 void ForwardList<T>::defaultState() {
     head_ = nullptr;
     size_ = 0;
+}
+
+template <typename T>
+void ForwardList<T>::swap(ForwardList& list) {
+    std::swap(head_, list.head_);
+    std::swap(size_, list.size_);
 }
 
 // iterator
