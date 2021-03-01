@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(${PROJECT_NAME} STATIC "test_benchmark_instance.hpp" "test_benchmark_instance.cpp")
-target_link_libraries(${PROJECT_NAME} cs)
+target_link_libraries(${PROJECT_NAME} PRIVATE cs)

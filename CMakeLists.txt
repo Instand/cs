@@ -34,8 +34,13 @@ endif()
 
 include(CMakePackageConfigHelpers)
 
-add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+file(GLOB_RECURSE HeaderFiles ${CMAKE_CURRENT_SOURCE_DIR}/include/cs/*.hpp)
+
+add_library(cs INTERFACE)
+add_library(cs::${PROJECT_NAME} ALIAS cs)
+
+target_sources(cs PRIVATE "$<BUILD_INTERFACE:${HeaderFiles}>")
+source_group("cs" ${HeaderFiles})
 
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_include_directories(${PROJECT_NAME}

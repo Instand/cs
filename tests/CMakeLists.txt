@@ -119,10 +119,10 @@ if (NOT MSVC AND NOT APPLE)
     set(LINKER_END_GROUP "-Wl,--end-group")
 endif()
 
-target_link_libraries(${TEST_NAME} ${LINKER_START_GROUP} gtest gmock cs ${LINKER_END_GROUP})
+target_link_libraries(${TEST_NAME} PRIVATE ${LINKER_START_GROUP} gtest gmock cs ${LINKER_END_GROUP})
 
 if (Boost_FOUND)
-    target_link_libraries(${TEST_NAME} Boost::filesystem)
+    target_link_libraries(${TEST_NAME} PRIVATE Boost::filesystem)
 endif()
 
 add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
